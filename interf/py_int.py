@@ -5,7 +5,7 @@ from ctypes import *
 
 class algo():
     """
-    instance of algo atm
+    instance of algo atm here
     """
 
     def __init__(self):
