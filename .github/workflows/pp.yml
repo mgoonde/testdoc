@@ -31,7 +31,7 @@ jobs:
 
       # page
       - name: deploy to page
-        uses: peaceiris/actions-gh-pages@v4
+        uses: peaceiris/actions-gh-pages@v3
         with:
           deploy_key: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: docs/_build/html
