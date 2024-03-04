@@ -9,7 +9,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   deploy:
-    # The type of runner that the job will run on
+    #
     runs-on: ubuntu-22.04
 
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -31,11 +31,8 @@ jobs:
       run: make html
 
       # page
-      - name: deploy to page
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          deploy_key: ${{ secretc.GITHUB_TOKEN }}
-          publish_dir: docs/_build/html
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+    - name: deploy to page
+       uses: peaceiris/actions-gh-pages@v4
+       with:
+         deploy_key: ${{ secretc.GITHUB_TOKEN }}
+         publish_dir: docs/_build/html
