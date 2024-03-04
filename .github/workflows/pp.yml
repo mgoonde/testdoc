@@ -27,6 +27,7 @@ jobs:
         run: python3 -m pip install sphinx-fortran
 
       - name: build
+        run: ls -a
         run: make html
 
       # page
