@@ -8,7 +8,7 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-22.04
 
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -38,11 +38,46 @@ jobs:
         run: ls -a ${{github.workspace }} && cd docs && make html
         #run: sphinx-build -b html docs public
       #- run: make html
-
-      # page
-      - name: deploy to page
-        uses: peaceiris/actions-gh-pages@v3
-        if: github.ref == 'refs/heads/main'
+      
+      - name: Archive artifact
+        shell: sh
+        if: runner.os == 'Linux'
+        run: |
+          tar \
+          --dereference --hard-dereference \
+          --exclude=.git \
+          --exclude=.github \
+          -cvf "$RUNNER_TEMP/artifact.tar" \
+          --directory=html .
+          
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: docs/_build/html
+          name: github-pages
+          path: ${{ runner.temp }}/artifact.tar
+          if-no-files-found: error
+
+  deploy:
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    # Specify runner + deployment step
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2 # or the latest "vX.X.X" version tag for this action
+  
+      # page
+    #  - name: deploy to page
+    #    uses: peaceiris/actions-gh-pages@v3
+    #    if: github.ref == 'refs/heads/main'
+    #    with:
+    #      github_token: ${{ secrets.GITHUB_TOKEN }}
+    #      publish_dir: docs/_build/html
