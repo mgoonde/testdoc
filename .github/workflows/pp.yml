@@ -9,7 +9,6 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   deploy:
-    #
     runs-on: ubuntu-22.04
 
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -24,15 +23,15 @@ jobs:
           node-version: 20
 
       # installation
-    - name: install deps
-      run: python3 -m pip install sphinx-fortran
+      - name: install deps
+        run: python3 -m pip install sphinx-fortran
 
-    - name: build
-      run: make html
+      - name: build
+        run: make html
 
       # page
-    - name: deploy to page
-       uses: peaceiris/actions-gh-pages@v4
-       with:
-         deploy_key: ${{ secretc.GITHUB_TOKEN }}
-         publish_dir: docs/_build/html
+      - name: deploy to page
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          deploy_key: ${{ secretc.GITHUB_TOKEN }}
+          publish_dir: docs/_build/html
