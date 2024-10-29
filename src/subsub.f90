@@ -19,4 +19,5 @@
 
 subroutine subsub()bind(C)
 
+! something
 end subroutine subsub
